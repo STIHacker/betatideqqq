@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BETA Rides - Leonides S. Virata Memorial School</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom, #00FF00, #FFFFFF, #FFFF00);
+            color: #333;
+            padding: 0;
+            margin: 0;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+        }
+        .header, .footer {
+            text-align: center;
+            padding: 20px;
+        }
+        .login-form, .rider-list {
+            margin: 20px 0;
+        }
+        .login-form input, .login-form button {
+            padding: 10px;
+            margin: 10px 0;
+            width: 100%;
+        }
+        .rider-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f1f1f1;
+            border-radius: 5px;
+        }
+        .rider-item a {
+            color: blue;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .rider-item a:hover {
+            text-decoration: underline;
+        }
+        .edit-remove-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .back-button {
+            padding: 10px 20px;
+            background-color: #FF6347;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+        .back-button:hover {
+            background-color: #FF4500;
+        }
+        .edit-remove-buttons {
+            display: flex;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>BETA Rides</h1>
+            <p>Leonides S. Virata Memorial School</p>
+        </div>
+
+        <div class="login-form" id="loginForm">
+            <h2>Login</h2>
+            <input type="text" id="lrn" placeholder="Enter your LRN" />
+            <input type="text" id="name" placeholder="Enter your Name" />
+            <button onclick="login()">Login</button>
+            <!-- Back button -->
+            <button class="back-button" onclick="goBack()">Back</button>
+        </div>
+
+        <div class="rider-list" id="riderList" style="display:none;">
+            <h2>Rider List</h2>
+            <div id="riders"></div>
+            <button onclick="showAdmin()">Admin Panel</button>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2024 Leonides S. Virata Memorial School</p>
+        </div>
+    </div>
+
+    <script>
+        const riderList = [
+            { name: "Sameer 1", phoneNumber: "09123456789" },
+            { name: "Sameer 2", phoneNumber: "09876543210" }
+        ];
+
+        function login() {
+            const lrn = document.getElementById("lrn").value;
+            const name = document.getElementById("name").value;
+            
+            if (lrn && name) {
+                document.getElementById("loginForm").style.display = "none";
+                document.getElementById("riderList").style.display = "block";
+                showRiders();
+            } else {
+                alert("Please enter your LRN and Name.");
+            }
+        }
+
+        function showRiders() {
+            const ridersDiv = document.getElementById("riders");
+            ridersDiv.innerHTML = '';  // Clear existing list
+            riderList.forEach((rider, index) => {
+                const riderItem = document.createElement("div");
+                riderItem.classList.add("rider-item");
+                riderItem.innerHTML = `
+                    <span>${rider.name}</span>
+                    <span><a href="tel:${rider.phoneNumber}">${rider.phoneNumber}</a></span>
+                    <div class="edit-remove-buttons">
+                        <button onclick="editRider(${index})">Edit</button>
+                        <button onclick="removeRider(${index})">Remove</button>
+                    </div>
+                `;
+                ridersDiv.appendChild(riderItem);
+            });
+        }
+
+        function editRider(index) {
+            const rider = riderList[index];
+            const newName = prompt("Edit Rider's Name:", rider.name);
+            const newPhone = prompt("Edit Rider's Phone Number:", rider.phoneNumber);
+            
+            if (newName && newPhone) {
+                riderList[index] = { name: newName, phoneNumber: newPhone };
+                alert("Rider updated successfully!");
+                showRiders();
+            } else {
+                alert("Both name and phone number are required.");
+            }
+        }
+
+        function removeRider(index) {
+            if (confirm("Are you sure you want to remove this rider?")) {
+                riderList.splice(index, 1);
+                alert("Rider removed successfully!");
+                showRiders();
+            }
+        }
+
+        function showAdmin() {
+            const name = prompt("Enter the new rider's name:");
+            const phone = prompt("Enter the new rider's phone number:");
+            
+            if (name && phone) {
+                riderList.push({ name: name, phoneNumber: phone });
+                alert("Rider added successfully!");
+                showRiders();
+            } else {
+                alert("Please fill in all fields.");
+            }
+        }
+
+        // Back button function
+        function goBack() {
+            document.getElementById("loginForm").style.display = "block";
+            document.getElementById("riderList").style.display = "none";
+            document.getElementById("lrn").value = '';
+            document.getElementById("name").value = '';
+        }
+    </script>
+
+</body>
+</html>
